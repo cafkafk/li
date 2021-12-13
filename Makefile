@@ -7,6 +7,8 @@ CFLAGS+=-O3 -march=native -std=c11 -Wall -W -pedantic -Wno-stringop-truncation
 CFLAGSREL+=-O3 -std=c11 -Wall -W -pedantic -Wno-stringop-truncation
 CPPFLAGS += -D_POSIX_C_SOURCE=1
 
+VERSION=0.1
+
 .PHONY: all release install uninstall debug clean
 
 
@@ -18,7 +20,9 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 $(TARGET)-release: $(SRC)
-	$(CC) $(CFLAGS) $(CPPFLAGSREL) $(LDFLAGS) $(SRC) -o li
+	$(CC) $(CFLAGS) $(CPPFLAGSREL) $(LDFLAGS) $(SRC) -o $(TARGET)
+	tar -czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)
+	$(RM) $(TARGET)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -32,3 +36,4 @@ $(TARGET)-debug: $(SRC)
 clean:
 	$(RM) $(TARGET)
 	$(RM) $(TARGET)-debug
+	$(RM) $(TARGET)-$(VERSION).tar.gz
