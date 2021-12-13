@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         (!(strcmp(argv[1], "-h")))) {
       printf("Usage: li <brighness>\n");
       printf("Where brightness is a integer percentage of max(e.g. 1-100)\n");
-      exit(EXIT_SUCCESS);
+      exit(EXIT_SUCCESS)
     }
   if (argc != 2)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "not enough arguments - try running help");
@@ -71,6 +71,10 @@ int main(int argc, char *argv[]) {
   strncat(basepath, dir->d_name, MAXPATHLENGTH - strlen(pre) - 1);
   strncat(maxpath, basepath, MAXPATHLENGTH - 1);
   strncat(brightpath, basepath, MAXPATHLENGTH - 1);
+
+  printf("%s\n", basepath);
+  printf("%s\n", maxpath);
+  printf("%s\n", brightpath);
 
   // SET PATHS FOR BACKLIGHT FILE I/O
   strcat(maxpath,
