@@ -81,6 +81,9 @@ int main(int argc, char *argv[]) {
          "/max_brightness"); // Not really safe, but not exploitable either.
   strcat(brightpath, "/brightness"); // Will just crash if length exceeds
 
+  printf("%s\n", maxpath);
+  printf("%s\n", brightpath);
+
   // OPEN FILES FOR I/O
   FILE *m_fp = fopen(maxpath, "r");
   if (m_fp == NULL)
