@@ -37,7 +37,7 @@ $ make
 To install simply run:
 #+begin_src bash
 $ make install
-#+end_srcL
+#+end_src
 ** Uninstalling
 To uninstall simply run:
 #+begin_src bash
