@@ -25,44 +25,18 @@
 #include <error.h> // for strcat, strcpy
 #include <dirent.h>
 
-/*
- * synopsis: prints some help to the user
- *
- * TODO consider if the placement of ls is appropriate
- * TODO documentation, waited because it is not finalized
- * */
-void help() {
-  printf("Usage: lc <device> <brighness>\n");
-  printf("Where brightness is a integer percentage of max(e.g. 1-100)\n");
-  system("ls /sys/class/backlight/\n");
-  exit(EXIT_SUCCESS);
-}
-
-//void ls_things(char * path) {
-//  char * files[8198][256] = {0};
-//  DIR *d;
-//  struct dirent *dir;
-//  d = opendir(path);
-//  int len;
-//  int i=0;
-//  if(d) {
-//      while((dir = readdir(d)) != NULL) {
-//          strncpy(files[i],dir->d_name,256);
-//          i++;
-//      }
-//     closedir(d);
-//  }
-//}
-
 int main(int argc, char *argv[]) {
   // CHECK INPUT
   if (argc == 2)
     if ((!(strcmp(argv[1], "--help"))) || (!(strcmp(argv[1], "help"))) ||
-        (!(strcmp(argv[1], "-h"))))
-      help();
-  if (argc != 3)
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "not enoguh arguments - try running help");
-  else if (atoi(argv[2]) == 0 || atoi(argv[2]) > 100)
+        (!(strcmp(argv[1], "-h")))) {
+      printf("Usage: li <brighness>\n");
+      printf("Where brightness is a integer percentage of max(e.g. 1-100)\n");
+      exit(EXIT_SUCCESS);
+    }
+  if (argc != 2)
+    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "not enough arguments - try running help");
+  else if (atoi(argv[1]) == 0 || atoi(argv[1]) > 100)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "invalid brightness [1-100]");
 
   // INITIALIZE PATH VARS
@@ -80,6 +54,7 @@ int main(int argc, char *argv[]) {
   if(d == NULL)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "opendir(path) failed");
 
+  // FIXME THIS IS UGLY
   if((dir=readdir(d)) == NULL)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(d) failed");
 
