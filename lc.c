@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         (!(strcmp(argv[1], "-h")))) {
       printf("Usage: li <brighness>\n");
       printf("Where brightness is a integer percentage of max(e.g. 1-100)\n");
-      exit(EXIT_SUCCESS)
+      exit(EXIT_SUCCESS);
     }
   if (argc != 2)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "not enough arguments - try running help");
