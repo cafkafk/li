@@ -17,17 +17,13 @@
 
 #define MAXPATHLENGTH 128
 
-// GNU coreutils style, take inspiration from ls
-#define OPEN_ERR "%s: cannot open %s: %s\n"
-#define WRITE_ERR "%s: cannot write %s: %s\n"
-#define ARG_ERR "%s: %s: %s\n"
-
 #include <assert.h> // for assert
 #include <errno.h>  // for errno, strerror
 #include <stdio.h>  // for printf, etc...
 #include <stdlib.h> // for EXIT_FAILURE, EXIT_SUCCESS, etc...
 #include <string.h> // for strcat, strcpy
 #include <error.h> // for strcat, strcpy
+#include <dirent.h>
 
 /*
  * synopsis: prints some help to the user
@@ -41,6 +37,22 @@ void help() {
   system("ls /sys/class/backlight/\n");
   exit(EXIT_SUCCESS);
 }
+
+//void ls_things(char * path) {
+//  char * files[8198][256] = {0};
+//  DIR *d;
+//  struct dirent *dir;
+//  d = opendir(path);
+//  int len;
+//  int i=0;
+//  if(d) {
+//      while((dir = readdir(d)) != NULL) {
+//          strncpy(files[i],dir->d_name,256);
+//          i++;
+//      }
+//     closedir(d);
+//  }
+//}
 
 int main(int argc, char *argv[]) {
   // CHECK INPUT
@@ -61,7 +73,20 @@ int main(int argc, char *argv[]) {
   strcpy(basepath, pre); // This is safe. PRE is of known length
 
   // VALIDATE USER INPUT LENGTH
-  strncat(basepath, argv[1], MAXPATHLENGTH - strlen(pre) - 1);
+  DIR *d;
+  struct dirent *dir;
+  d = opendir(pre);
+  if(d == NULL)
+    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "opendir(path) failed");
+
+  if((dir=readdir(d)) == NULL)
+    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(d) failed");
+
+  closedir(d);
+
+  printf("%s\n", dir->d_name);
+
+  strncat(basepath, dir->d_name, MAXPATHLENGTH - strlen(pre) - 1);
   strncat(maxpath, basepath, MAXPATHLENGTH - 1);
   strncat(brightpath, basepath, MAXPATHLENGTH - 1);
 
