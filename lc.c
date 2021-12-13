@@ -76,6 +76,8 @@ int main(int argc, char *argv[]) {
   DIR *d;
   struct dirent *dir;
   d = opendir(pre);
+  d = opendir(pre);
+  d = opendir(pre);
   if(d == NULL)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "opendir(path) failed");
 
