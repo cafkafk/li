@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "fscanf(m_fp...) failed");
 
   // CALCULATE TARGET BRIGHTNESS AS % OF MAX
-  if (!fprintf(b_fp, "%d", atoi(argv[2]) * (m_b / 100)))
+  if (!fprintf(b_fp, "%d", atoi(argv[1]) * (m_b / 100)))
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "fprintf(b_fp...) failed");
 
   // CLOSE FILES
