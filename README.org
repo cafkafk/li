@@ -13,7 +13,6 @@ just for me, so don't expect anything.
 - Adjust brightness of built-in monitors (laptop monitors).
 - Works on % of maxbrightness, not the arbitrary /sys/class/backlight... value fun.
 - Micro codebase.
-- Somewhat safe to =setuid=.
 
 * Manual
 ** Downloading
