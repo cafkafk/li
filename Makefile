@@ -4,16 +4,21 @@ PREFIX ?= /usr/local
 
 CC=gcc
 CFLAGS+=-O3 -march=native -std=c11 -Wall -W -pedantic -Wno-stringop-truncation
+CFLAGSREL+=-O3 -std=c11 -Wall -W -pedantic -Wno-stringop-truncation
 CPPFLAGS += -D_POSIX_C_SOURCE=1
 
-.PHONY: all install uninstall debug clean 
+.PHONY: all release install uninstall debug clean
 
 
 all: $(TARGET)
+release: $(TARGET)-release
 debug: $(TARGET)-debug
 
 $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(SRC) -o $@
+
+$(TARGET)-release: $(SRC)
+	$(CC) $(CFLAGS) $(CPPFLAGSREL) $(LDFLAGS) $(SRC) -o li
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
