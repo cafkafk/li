@@ -1,0 +1,37 @@
+* LC - Light Command
+Light command is a small c program that adjusts the brightness of monitors.
+At the moment, only built-in monitors function i.e. most laptop monitors.
+Why make such a tiny program? There was a vacuum between gui application and
+shell scripts. The author did not particularly enjoy xbacklight
+(specially it's dependence on a xconfig file for the monitor in some cases,
+and the syntax is just stupid... -set?).
+
+** USAGE
+To get help for =lc=
+#+begin_src sh
+$ lc --help
+#+end_src
+To set the target brightness (as an integer).
+#+begin_src
+# lc device brightness
+#+end_src
+*Finding devices*: lc will tell you the names of devices on help,
+but if you would like to find it yourself, simply run:
+#+begin_src bash
+$ ls /sys/class/backlight/
+#+end_src
+*Notice*: the brightness is a percentage, so 100 -> 100% brightness,
+50 -> 50% brightness etc...
+Further it must be in interval (0;100].
+** BUILD
+To build simply run make.
+#+begin_src bash
+$ make
+#+end_src
+** INSTALL
+Simply put the =lc= file into your path, or a folder in your path.
+** ROADMAP
+- [ ] Down the road, lc looks to support ddcutils,
+  so it can change desktop monitors as well.
+  
+
