@@ -17,13 +17,13 @@
 
 #define MAXPATHLENGTH 128
 
-#include <assert.h> // for assert
+#include <assert.h>
 #include <dirent.h>
-#include <errno.h>  // for errno, strerror
-#include <error.h>  // for strcat, strcpy
-#include <stdio.h>  // for printf, etc...
-#include <stdlib.h> // for EXIT_FAILURE, EXIT_SUCCESS, etc...
-#include <string.h> // for strcat, strcpy
+#include <errno.h>
+#include <error.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[]) {
   DIR *d;
@@ -46,7 +46,8 @@ int main(int argc, char *argv[]) {
   char basepath[MAXPATHLENGTH] = {0};
   char maxpath[MAXPATHLENGTH] = {0};
   char brightpath[MAXPATHLENGTH] = {0};
-  strcpy(basepath, pre); // This is safe. PRE is of known length
+
+  strcpy(basepath, pre);
 
   d = opendir(pre);
 
@@ -73,9 +74,8 @@ int main(int argc, char *argv[]) {
   strncat(maxpath, basepath, MAXPATHLENGTH - 1);
   strncat(brightpath, basepath, MAXPATHLENGTH - 1);
 
-  strcat(maxpath,
-         "/max_brightness"); // Not really safe, but not exploitable either.
-  strcat(brightpath, "/brightness"); // Will just crash if length exceeds
+  strcat(maxpath, "/max_brightness");
+  strcat(brightpath, "/brightness");
 
   FILE *m_fp = fopen(maxpath, "r");
   if (m_fp == NULL)
