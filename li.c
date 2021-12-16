@@ -1,4 +1,4 @@
-/* lc - light command: a brightness setter
+/* li - backLIght changer: a brightness setter
  * Copyright (C) 2020 - 2021 Christina (cafkafk)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define MAXPATHLENGTH 128
-
 #include <assert.h>
 #include <dirent.h>
 #include <errno.h>
@@ -24,11 +22,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 int main(int argc, char *argv[]) {
-  DIR *d;
-  struct dirent *dir;
-
   if (argc == 2)
     if ((!(strcmp(argv[1], "--help"))) || (!(strcmp(argv[1], "help"))) ||
         (!(strcmp(argv[1], "-h")))) {
@@ -42,69 +38,85 @@ int main(int argc, char *argv[]) {
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
                   "invalid brightness [1-100]");
 
-  char *pre = "/sys/class/backlight/";
-  char basepath[MAXPATHLENGTH] = {0};
-  char maxpath[MAXPATHLENGTH] = {0};
-  char brightpath[MAXPATHLENGTH] = {0};
+  DIR *backlight_dir;
 
-  strcpy(basepath, pre);
+  struct dirent *backlight_dirent;
 
-  d = opendir(pre);
+  FILE *max_brightness_file;
+  FILE *brightness_file;
 
-  if (d == NULL)
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "opendir(path) failed");
+  char *prefix = "/sys/class/backlight/";
+  char basepath[PATH_MAX] = {0};
+  char maxpath[PATH_MAX] = {0};
+  char brightpath[PATH_MAX] = {0};
 
-  if ((dir = readdir(d)) == NULL)
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(d) failed");
+  int max_brightness;
 
-  if ((dir = readdir(d)) == NULL)
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(d) failed");
+  long long buffer_full_indicator = 0;
 
-  if ((dir = readdir(d)) == NULL) {
-    fprintf(stderr, "%s", "No compatible display found.\n");
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(d) failed");
+  buffer_full_indicator = snprintf(basepath, PATH_MAX - 1, "%s", prefix);
+  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
+      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
+
+  backlight_dir = opendir(prefix);
+
+  if (backlight_dir == NULL)
+    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "opendir(path) failed");
+
+  // We first read in . and ..
+  for (int i = 0; i < 3; i++) {
+    errno = 0; // sentinel
+    if (((backlight_dirent = readdir(backlight_dir)) == NULL) || errno) {
+      if(i==2) // not failure on . or ..
+        fprintf(stderr, "%s", "No compatible display found.\n");
+      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "readdir(backlight_dir) failed: %s", strerror(errno));
+    }
   }
 
-  if (closedir(d))
-    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "closedir(d) failed");
+  if (closedir(backlight_dir))
+    error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "closedir(backlight_dir) failed");
 
-  strncat(basepath, dir->d_name, MAXPATHLENGTH - strlen(pre) - 1);
-  strncat(maxpath, basepath, MAXPATHLENGTH - 1);
-  strncat(brightpath, basepath, MAXPATHLENGTH - 1);
+  buffer_full_indicator = snprintf(basepath, PATH_MAX - strlen(prefix) - 1, "%s%s", prefix, backlight_dirent->d_name);
+  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - strlen(prefix) - 1)
+      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
 
-  strcat(maxpath, "/max_brightness");
-  strcat(brightpath, "/brightness");
+  buffer_full_indicator = snprintf(maxpath, PATH_MAX - 1, "%s/max_brightness", basepath);
+  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
+      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
 
-  FILE *m_fp = fopen(maxpath, "r");
-  if (m_fp == NULL)
+  buffer_full_indicator = snprintf(brightpath, PATH_MAX - 1, "%s/brightness", basepath);
+  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
+      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
+
+  max_brightness_file = fopen(maxpath, "r");
+
+  if (max_brightness_file == NULL)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
                   "fopen(maxpath, \"r\")");
 
-  FILE *b_fp = fopen(brightpath, "w");
-  if (b_fp == NULL)
+  brightness_file = fopen(brightpath, "w");
+
+  if (brightness_file == NULL)
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
                   "fopen(brightpath, \"w\")");
 
-  int m_b;
 
-  if (0 >= fscanf(m_fp, "%d", &m_b))
+  if (0 >= fscanf(max_brightness_file, "%d", &max_brightness))
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "fscanf(m_fp...) failed");
+                  "fscanf(max_brightness_file...) failed");
 
-  if (!fprintf(b_fp, "%d", atoi(argv[1]) * (m_b / 100)))
+  if (!fprintf(brightness_file, "%d", atoi(argv[1]) * (max_brightness / 100)))
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "fprintf(b_fp...) failed");
+                  "fprintf(brightness_file...) failed");
 
-  if (fclose(m_fp)) {
+  if (fclose(max_brightness_file)) {
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "fclose(m_fp) failed");
+                  "fclose(max_brightness_file) failed");
   }
 
-  if (fclose(b_fp)) {
+  if (fclose(brightness_file)) {
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__,
-                  "fclose(b_fp) failed");
+                  "fclose(brightness_file) failed");
   }
 
   return EXIT_SUCCESS;
