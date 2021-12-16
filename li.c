@@ -76,23 +76,15 @@ int main(int argc, char *argv[]) {
   if (closedir(backlight_dir))
     error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "closedir(backlight_dir) failed");
 
-  buffer_full_indicator = snprintf(basepath, PATH_MAX - strlen(prefix) - 1, "%s", backlight_dirent->d_name);
+  buffer_full_indicator = snprintf(basepath, PATH_MAX - strlen(prefix) - 1, "%s%s", prefix, backlight_dirent->d_name);
   if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - strlen(prefix) - 1)
       error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
 
-  buffer_full_indicator = snprintf(maxpath, PATH_MAX - 1, "%s", basepath);
+  buffer_full_indicator = snprintf(maxpath, PATH_MAX - 1, "%s/max_brightness", basepath);
   if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
       error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
 
-  buffer_full_indicator = snprintf(brightpath, PATH_MAX - 1, "%s", basepath);
-  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
-      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
-
-  buffer_full_indicator = snprintf(maxpath, PATH_MAX - 1, "%s", "/max_brightness");
-  if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
-      error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
-
-  buffer_full_indicator = snprintf(brightpath, PATH_MAX - 1, "%s", "/brightness");
+  buffer_full_indicator = snprintf(brightpath, PATH_MAX - 1, "%s/brightness", basepath);
   if (0 > buffer_full_indicator || buffer_full_indicator > PATH_MAX - 1 )
       error_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, "snprintf() failed: %s", strerror(errno));
 
