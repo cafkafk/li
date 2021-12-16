@@ -1,6 +1,6 @@
 TARGET=li
 SRC=li.c
-PREFIX ?= /usr/local
+PREFIX ?= ~/.local/
 
 CC=gcc
 CFLAGS+=-O3 -march=native -std=c11 -Wall -W -pedantic -Wno-stringop-truncation
