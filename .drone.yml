@@ -1,0 +1,23 @@
+---
+kind: pipeline
+type: docker
+name: make
+
+steps:
+- name: build
+  image: gcc
+  commands:
+  - make
+
+---
+kind: pipeline
+type: docker
+name: install
+
+steps:
+- name: run
+  image: gcc
+  commands:
+  - make
+  - make install
+
