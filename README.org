@@ -1,3 +1,4 @@
+#+options: toc:nil
 * LI - backLIght changer
 #+html: <a href="https://drone.cafkafk.com/cafkafk/li">  <img src="https://drone.cafkafk.com/api/badges/cafkafk/li/status.svg?ref=refs/heads/main" /></a> <img src="https://img.shields.io/liberapay/patrons/cafkafk.svg?logo=liberapay">
 Light command is a small c program that adjusts the brightness of monitors. At
