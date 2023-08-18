@@ -1,6 +1,6 @@
 #+options: toc:nil
 * LI - backLIght changer
-#+html: <img src="https://img.shields.io/badge/license-GPLv3-blue"> <a href="https://drone.cafkafk.com/cafkafk/li">  <img src="https://drone.cafkafk.com/api/badges/cafkafk/li/status.svg?ref=refs/heads/main" /></a> <a href="https://liberapay.com/cafkafk/donate"><img src="https://img.shields.io/liberapay/patrons/cafkafk.svg?logo=liberapay"></a> <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg">
+#+html: <img src="https://img.shields.io/badge/license-GPLv3-blue"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg">
 Light command is a small c program that adjusts the brightness of monitors. At
 the moment, only built-in monitors work i.e. most laptop monitors. Why make such
 a tiny program? There was a vacuum between gui application and shell scripts.
