@@ -20,7 +20,7 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 $(TARGET)-release: $(SRC)
-	$(CC) $(CFLAGS) $(CPPFLAGSREL) $(LDFLAGS) $(SRC) -o $(TARGET)
+	$(CC) $(CFLAGS) $(CFLAGSREL) $(LDFLAGS) $(SRC) -o $(TARGET)
 	tar -czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)
 	$(RM) $(TARGET)
 
